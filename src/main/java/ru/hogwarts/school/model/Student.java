@@ -1,16 +1,15 @@
 package ru.hogwarts.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
+@Table(name = "students")
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String name;
     private int age;
@@ -18,13 +17,20 @@ public class Student {
     public Student() {
     }
 
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
+
     public Student(Long id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
     }
 
-    // Геттеры и сеттеры
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    private Avatar avatar;
+
+
     public Long getId() {
         return id;
     }
@@ -47,6 +53,14 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     @Override
