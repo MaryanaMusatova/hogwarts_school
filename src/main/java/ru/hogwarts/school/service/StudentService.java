@@ -47,4 +47,16 @@ public class StudentService {
                 .map(Student::getFaculty)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
     }
+
+    public Integer getTotalStudentsCount() {
+        return studentRepository.getTotalCount();
+    }
+
+    public Double getAverageStudentsAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    public List<Student> getLastStudents() {
+        return studentRepository.getLastStudents();
+    }
 }
