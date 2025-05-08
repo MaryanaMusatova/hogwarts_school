@@ -2,6 +2,8 @@ package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -33,6 +35,9 @@ public class AvatarService {
         this.avatarRepository = avatarRepository;
     }
 
+    public Page<Avatar> getAllAvatars(int page, int size) {
+        return avatarRepository.findAll(PageRequest.of(page, size));
+    }
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         // Проверка файла
         if (file == null || file.isEmpty()) {
