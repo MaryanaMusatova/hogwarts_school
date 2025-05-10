@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/student")
@@ -70,4 +71,18 @@ public class StudentController {
     public List<Student> getLastStudents() {
         return studentService.getLastStudents();
     }
+
+    @GetMapping("/names-starting-with-a")
+    public List<String> getStudentsNamesStartingWithA() {
+        return studentService.getStudentsNamesStartingWithA();
+    }
+
+    @GetMapping("/parallel-sum")
+    public long getParallelSum() {
+        return IntStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .asLongStream()
+                .sum();
+    }
 }
+

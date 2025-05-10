@@ -10,6 +10,8 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @Transactional
@@ -107,5 +109,25 @@ public class StudentService {
         List<Student> students = studentRepository.getLastStudents();
         logger.debug("Found {} last students", students.size());
         return students;
+    }
+
+    public List<String> getStudentsNamesStartingWithA() {
+        logger.debug("Fetching students whose names start with 'A'");
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name.startsWith("A"))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    // Самый быстрый - Формула Гаусса: n(n+1)/2
+    //return 1_000_000L * (1_000_000L + 1L) / 2L;
+
+    public long calculateParallelSum() {
+        return IntStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .asLongStream()
+                .sum();
     }
 }
