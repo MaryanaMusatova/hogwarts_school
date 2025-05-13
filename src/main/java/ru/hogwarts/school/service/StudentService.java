@@ -130,4 +130,8 @@ public class StudentService {
                 .asLongStream()
                 .sum();
     }
+
+    public List<Student> getFirstSixStudents() {
+        return studentRepository.findFirst6ByOrderByIdAsc();
+    }
 }

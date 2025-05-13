@@ -84,5 +84,57 @@ public class StudentController {
                 .asLongStream()
                 .sum();
     }
-}
 
+
+    // 1: Параллельный вывод
+    @GetMapping("/print-parallel")
+    public void printNamesParallel() {
+
+        List<Student> students = studentService.getFirstSixStudents();
+
+        System.out.println("Основной поток:");
+        System.out.println(students.get(0).getName());
+        System.out.println(students.get(1).getName());
+
+        // Параллельные потоки
+        new Thread(() -> {
+            System.out.println("Поток 1:");
+            System.out.println(students.get(2).getName());
+            System.out.println(students.get(3).getName());
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("Поток 2:");
+            System.out.println(students.get(4).getName());
+            System.out.println(students.get(5).getName());
+        }).start();
+    }
+
+    //  2: Синхронизированный вывод
+    @GetMapping("/print-synchronized")
+    public void printNamesSynchronized() {
+
+        List<Student> students = studentService.getFirstSixStudents();
+
+        System.out.println("Основной поток:");
+        printSynchronized(students.get(0).getName());
+        printSynchronized(students.get(1).getName());
+
+        // Параллельные потоки
+        new Thread(() -> {
+            System.out.println("Поток 1:");
+            printSynchronized(students.get(2).getName());
+            printSynchronized(students.get(3).getName());
+        }).start();
+
+        new Thread(() -> {
+            System.out.println("Поток 2:");
+            printSynchronized(students.get(4).getName());
+            printSynchronized(students.get(5).getName());
+        }).start();
+    }
+
+    private synchronized void printSynchronized(String name) {
+        System.out.println(name);
+    }
+}

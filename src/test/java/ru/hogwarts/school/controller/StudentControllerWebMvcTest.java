@@ -13,7 +13,9 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -23,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class StudentControllerMockTest {
+class StudentControllerWebMvcTest {
 
     private MockMvc mockMvc;
 
@@ -52,7 +54,6 @@ class StudentControllerMockTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Harry Potter"));
     }
-
     @Test
     void getStudentById_shouldReturnStudentWhenExists() throws Exception {
         when(studentService.getStudentById(anyLong())).thenReturn(Optional.of(testStudent));
@@ -104,5 +105,40 @@ class StudentControllerMockTest {
         mockMvc.perform(get("/student/1/faculty"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Gryffindor"));
+    }
+
+
+    @Test
+    void printParallelTest() throws Exception {
+        List<Student> testStudents = Arrays.asList(
+                new Student(1L, "Гермиона", 20),
+                new Student(2L, "Волан де Морт", 21),
+                new Student(3L, "Гарри Поттер", 22),
+                new Student(4L, "Луна Лавгуд", 23),
+                new Student(5L, "Рон Уизли", 24),
+                new Student(6L, "Букля", 25)
+        );
+
+        when(studentService.getFirstSixStudents()).thenReturn(testStudents);
+
+        mockMvc.perform(get("/student/print-parallel"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void printSynchronizedTest() throws Exception {
+        List<Student> testStudents = Arrays.asList(
+                new Student(1L, "Гермиона", 20),
+                new Student(2L, "Волан де Морт", 21),
+                new Student(3L, "Гарри Поттер", 22),
+                new Student(4L, "Луна Лавгуд", 23),
+                new Student(5L, "Рон Уизли", 24),
+                new Student(6L, "Букля", 25)
+        );
+
+        when(studentService.getFirstSixStudents()).thenReturn(testStudents);
+
+        mockMvc.perform(get("/student/print-synchronized"))
+                .andExpect(status().isOk());
     }
 }
